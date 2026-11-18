@@ -615,7 +615,7 @@ mark {
 }
 
 .canvas-stage > .mixer {
-  max-width: 920px;
+  max-width: 1100px;
 }
 
 .stepper {
@@ -1301,80 +1301,26 @@ mark {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-areas:
-    'l q r'
-    'f f f'
+    'l v r'
     'n n n';
   align-items: center;
-  gap: 12px 20px;
+  gap: 12px 18px;
 }
 
-.mixer-quad {
-  grid-area: q;
-  justify-self: center;
-  width: 100%;
-  max-width: 440px;
+.mixer-view {
+  grid-area: v;
+  min-width: 0;
 }
 
-.mixer-quad .scene-svg {
-  max-height: max(220px, calc(100dvh - 640px));
-}
-
-.flight {
-  grid-area: f;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 12px;
-}
-
-.flight-panel {
-  margin: 0;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--panel);
-  overflow: hidden;
-}
-
-.flight-panel figcaption {
-  padding: 2px 10px 6px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-.flight-svg {
+.sim-canvas {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 150px;
-}
-
-.flight-readout {
-  grid-column: 1 / -1;
-  text-align: center;
-  font-size: 0.82rem;
-  font-weight: 700;
-}
-
-.ground-line {
-  stroke: var(--ink);
-  stroke-width: 2;
-}
-
-.ground-tick {
-  stroke: var(--muted);
-  stroke-width: 1.5;
-}
-
-.alt-scale {
-  stroke: var(--line);
-  stroke-width: 3;
-  stroke-linecap: round;
-}
-
-.alt-dot {
-  fill: var(--green);
-  stroke: var(--ink);
-  stroke-width: 1.5;
+  aspect-ratio: 16 / 10;
+  max-height: max(260px, calc(100dvh - 470px));
+  border: 1.5px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--shadow);
+  background: var(--bg);
 }
 
 .stick-col.left {
@@ -1394,10 +1340,14 @@ mark {
   .mixer {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
-      'q q'
+      'v v'
       'l r'
-      'f f'
       'n n';
+  }
+
+  .sim-canvas {
+    aspect-ratio: 4 / 3;
+    max-height: none;
   }
 }
 
@@ -1818,9 +1768,7 @@ a.module-card:hover {
     max-height: 60vh;
   }
 
-  .mixer-quad .scene-svg {
-    max-height: 44vh;
-  }
+
 
   .lesson-head {
     order: 1;

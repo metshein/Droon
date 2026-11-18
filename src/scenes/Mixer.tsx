@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import QuadTop from './QuadTop';
 import Stick from './Stick';
-import FlightView from './FlightView';
+import FlightSim from './FlightSim';
 import type { MotorQuad } from '../types';
 
 // Interaktiivne mikser Mode 2 puldiga: vasak kang = gaas + yaw, parem kang = pitch + roll.
@@ -51,19 +50,11 @@ export default function Mixer() {
   const saturated = mixRaw(g, roll, pitch, yaw).some((v) => v < 0 || v > 1);
   const leftDeltas = MIX.map(([, , y]) => g - 0.5 + y * yaw);
   const rightDeltas = MIX.map(([r, p]) => r * roll + p * pitch);
-  const accelerating = leftDeltas.map((_, i) => i).filter((i) => leftDeltas[i] + rightDeltas[i] > 0.02);
 
   return (
     <div className="mixer">
-      <div className="mixer-quad">
-        <QuadTop
-          motors={motors}
-          showNumbers
-          showDirections
-          showTorque
-          highlight={accelerating}
-          bodyYaw={yaw * 300}
-        />
+      <div className="mixer-view">
+        <FlightSim motors={motors} throttle={g} pitch={right.y * 30} roll={right.x * 30} yaw={left.x} />
       </div>
       <div className="stick-col left">
           <Stick
@@ -86,12 +77,6 @@ export default function Mixer() {
           />
           <MotorChips deltas={rightDeltas} />
       </div>
-      <FlightView
-        // Püsivas kaldes pöörlevad mootorid jälle ühtlaselt, seega kogutõukejõud tuleb gaasist (T ∝ n²).
-        thrust={(g / 0.5) ** 2}
-        pitch={right.y * 30}
-        roll={right.x * 30}
-      />
       <p className={saturated ? 'mixer-note warn' : 'mixer-note'}>
         {saturated
           ? 'Mõni mootor on piiril (0% või 100%): käsku ei saa täpselt täita.'
