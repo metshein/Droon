@@ -41,7 +41,7 @@ export default function ThrustCurve({ rpm = 0.5 }: { rpm?: number }) {
           </g>
         ))}
         <text x={(L + R) / 2} y={H - 8} className="axis-title">
-          pöörlemissagedus n (maksimumist)
+          propelleri kiirus
         </text>
 
         <path d={curve(1)} className="curve linear" />
@@ -55,22 +55,22 @@ export default function ThrustCurve({ rpm = 0.5 }: { rpm?: number }) {
         <g className="legend" transform={`translate(${L + 10} ${T + 6})`}>
           <rect width={176} height={64} rx={10} className="legend-bg" />
           <line x1={10} x2={30} y1={16} y2={16} className="curve thrust" />
-          <text x={38} y={20}>tõukejõud ∝ n²</text>
+          <text x={38} y={20}>tõukejõud</text>
           <line x1={10} x2={30} y1={34} y2={34} className="curve power" />
-          <text x={38} y={38}>võimsus ∝ n³</text>
+          <text x={38} y={38}>akukulu</text>
           <line x1={10} x2={30} y1={52} y2={52} className="curve linear" />
-          <text x={38} y={56}>lineaarne (võrdluseks)</text>
+          <text x={38} y={56}>võrdluseks: sirge</text>
         </g>
       </svg>
 
       <div className="scene-controls">
         <label className="slider">
-          <span>Pöörded: {Math.round(n * 100)}%</span>
+          <span>Propelleri kiirus: {Math.round(n * 100)}%</span>
           <input type="range" min={0} max={1} step={0.01} value={n} onChange={(e) => setN(Number(e.target.value))} />
         </label>
         <div className="readout">
           <span className="thrust">Tõukejõud {Math.round(thrust * 100)}%</span>
-          <span className="power">Võimsus {Math.round(power * 100)}%</span>
+          <span className="power">Akukulu {Math.round(power * 100)}%</span>
         </div>
       </div>
     </div>

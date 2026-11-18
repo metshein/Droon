@@ -4,7 +4,6 @@ import FlightSim from './FlightSim';
 import type { MotorQuad } from '../types';
 
 // Interaktiivne mikser Mode 2 puldiga: vasak kang = gaas + yaw, parem kang = pitch + roll.
-// Kere pööre näitab ainult yaw-käsku: päris droonil kompenseerib lennukontroller roll/pitch-i kõrvalmõju.
 // Märgid: roll paremale, nina alla ja yaw paremale (päripäeva) on positiivsed.
 export const MIX: [number, number, number][] = [
   // [roll, pitch, yaw]
@@ -80,7 +79,7 @@ export default function Mixer() {
       <p className={saturated ? 'mixer-note warn' : 'mixer-note'}>
         {saturated
           ? 'Mõni mootor on piiril (0% või 100%): käsku ei saa täpselt täita.'
-          : `G ${Math.round(g * 100)}% · R ${Math.round(roll * 100)} · P ${Math.round(pitch * 100)} · Y ${Math.round(yaw * 100)}`}
+          : 'Vihje: anna kõigepealt veidi gaasi ja tõuse üles.'}
       </p>
     </div>
   );

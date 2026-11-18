@@ -9,81 +9,71 @@ const moodul: CourseModule = {
   id: 'kuidas-lendab',
   number: 1,
   title: 'Kuidas quad lendab',
-  summary: 'Neli fikseeritud propellerit, ükski juhtpind, ja ometi täielik kontroll kolmel teljel. Vaatame, kuidas.',
-  minutes: 15,
+  summary: 'Neli propellerit ja mitte ühtegi tüüri, ometi saab drooni juhtida igas suunas. Vaatame, kuidas.',
+  minutes: 12,
   level: 'Algaja',
   learn: [
-    { text: 'Miks quad saab hakkama ilma juhtpindadeta', step: 1 },
-    { text: 'Kuidas tõukejõud sõltub pööretest', step: 2 },
-    { text: 'Miks naaberpropellerid pöörlevad vastassuundades', step: 5 },
-    { text: 'Kuidas tekivad pitch, roll ja yaw', step: 9 },
-    { text: 'Kuidas mikser pulgakäsud mootoriteks teisendab', step: 10 },
+    { text: 'Miks droonil pole tüüre vaja', step: 1 },
+    { text: 'Kuidas propeller drooni üles tõstab', step: 2 },
+    { text: 'Miks propellerid pöörlevad eri suundades', step: 5 },
+    { text: 'Kuidas droon kaldub ja pöörab', step: 9 },
+    { text: 'Kuidas puldi kangid mootoreid juhivad', step: 10 },
   ],
   steps: [
     {
       short: 'Neli rootorit',
-      title: 'Neli rootorit, mitte ühtegi juhtpinda',
+      title: 'Neli propellerit, mitte ühtegi tüüri',
       tag: 'MÕISTE',
-      text: `Lennukil on tüürid ja helikopteril keerukas rootoripea, mis muudab labade kaldenurka. Quadil pole kumbagi: neli **fikseeritud sammuga propellerit** on otse mootorite võllil.
+      text: `Lennukil on tiibadel liikuvad tüürid. Quadil neid pole: neli propellerit on kinni otse mootorite küljes.
 
-Kogu juhtimine käib ainult **mootorite pöörlemiskiiruse muutmisega**.
+Droon liigub ainult nii, et mõni mootor pöörleb **kiiremini** ja mõni **aeglasemalt**. See on kogu saladus.
 
-Numbrid järgivad Betaflighti vaikimisi **Quad X** paigutust: M1 tagumine parem, M2 eesmine parem, M3 tagumine vasak, M4 eesmine vasak.`,
-      keyIdea: 'Neli mootorit, neli juhitavat suurust: kogutõukejõud ning pööre ümber kolme telje.',
+Mootoritel on numbrid. Kasutame samu numbreid, mida kasutab populaarne droonitarkvara **Betaflight**: M1 taga paremal, M2 ees paremal, M3 taga vasakul, M4 ees vasakul.`,
+      keyIdea: 'Kõik, mida droon teeb, tuleb nelja mootori kiiruse muutmisest.',
       changes: [
-        { kind: '+', text: 'Quad X raam, nina üleval' },
+        { kind: '+', text: 'Droon ülalt vaadates, nina üleval' },
         { kind: '+', text: 'Mootorid M1–M4' },
       ],
       metrics: [
         { label: 'Mootoreid', value: '4' },
-        { label: 'Juhtpindu', value: '0' },
-        { label: 'Juhitavaid suurusi', value: '4' },
+        { label: 'Tüüre', value: '0' },
       ],
       scene: { type: 'quadTop', motors: [0.5, 0.5, 0.5, 0.5], showNumbers: true },
     },
     {
       short: 'Tõukejõud',
-      title: 'Tõukejõud kasvab pöörete ruuduga',
+      title: 'Propeller lükkab õhku alla',
       tag: 'FÜÜSIKA',
-      text: `Propeller lükkab õhku alla ja Newtoni kolmanda seaduse järgi lükkab õhk propellerit üles. See on **tõukejõud** (thrust).
+      text: `Propeller töötab nagu ventilaator: see lükkab õhku alla ja õhk lükkab propellerit vastu üles. Seda ülespoole suunatud jõudu nimetatakse **tõukejõuks**.
 
-Paigal oleva propelleri puhul kehtib hea lähendusega
-- tõukejõud **T ≈ k·n²**
-- vajalik võimsus **P ∝ n³**
+Mida kiiremini propeller pöörleb, seda suurem on tõukejõud, aga mitte võrdeliselt. **Kaks korda kiiremini** pöörlev propeller annab umbes **neli korda** rohkem tõukejõudu.
 
-kus *n* on pöörlemissagedus ja *k* sõltub propelleri läbimõõdust, sammust, labade kujust ning õhu tihedusest. Liiguta liugurit.`,
-      keyIdea: 'Pöörete kahekordistamine annab umbes 4× tõukejõudu, aga nõuab umbes 8× võimsust.',
-      changes: [
-        { kind: '+', text: 'Tõukejõu kõver ∝ n²' },
-        { kind: '+', text: 'Võimsuse kõver ∝ n³' },
-      ],
+Liiguta liugurit ja vaata, kuidas roheline joon kasvab.`,
+      keyIdea: 'Natuke kiirem pöörlemine annab tunduvalt rohkem jõudu, aga kulutab ka palju rohkem akut.',
+      changes: [{ kind: '+', text: 'Tõukejõu graafik' }],
       metrics: [
         { label: 'Pöörded', value: '×2' },
-        { label: 'Tõukejõud', value: '×4' },
-        { label: 'Võimsus', value: '×8' },
+        { label: 'Tõukejõud', value: '≈ ×4' },
       ],
       scene: { type: 'thrustCurve', rpm: 0.5 },
     },
     {
       short: 'Hõljumine',
-      title: 'Hõljumine: tõukejõud võrdub kaaluga',
+      title: 'Hõljumine: jõud on tasakaalus',
       tag: 'FÜÜSIKA',
-      text: `Paigal hõljumiseks peab nelja mootori summaarne tõukejõud võrduma drooni kaaluga:
+      text: `Raskusjõud tõmbab drooni alla. Kui nelja propelleri tõukejõud kokku on täpselt sama suur, jääb droon õhus paigale: see **hõljub**.
 
-**T₁ + T₂ + T₃ + T₄ = m·g**
+Näiteks 600-grammine droon vajab hõljumiseks, et iga mootor tõstaks umbes 150 grammi.
 
-Näiteks 600 g droon vajab hõljumiseks kokku umbes 5,9 N ehk ligikaudu 150 grammi tõukejõudu mootori kohta.
-
-Oluline disainiparameeter on **tõukejõu ja kaalu suhe** (TWR). Kaameradroonil piisab umbes 2:1, võistlus- ja freestyle-FPV droonid on sageli 8:1 või rohkem.`,
-      // TODO(ekspert): TWR vahemikud (kaameradroon ~2:1, 5" FPV 8:1+) on orienteeruvad, kontrolli.
-      keyIdea: 'Mida suurem TWR, seda väiksema gaasiga droon hõljub ja seda rohkem varu jääb manöövriteks.',
+Hea droon suudab tõsta mitu korda rohkem, kui ta ise kaalub. Siis jääb jõudu üle kiireks tõusuks ja manöövriteks.`,
+      // TODO(ekspert): kas lisada orienteeruvad tõukejõu/kaalu suhted (kaameradroon ~2:1, FPV 5"+ 8:1)?
+      keyIdea: 'Hõljumiseks peab tõukejõud võrduma drooni kaaluga.',
       changes: [
-        { kind: '+', text: 'Raskusjõud m·g' },
-        { kind: '~', text: 'Vaade: külgvaade' },
+        { kind: '+', text: 'Raskusjõud (punane nool)' },
+        { kind: '~', text: 'Vaade küljelt' },
       ],
       metrics: [
         { label: 'Kaal', value: '600 g' },
-        { label: 'Vajalik ΣT', value: '5,9 N' },
         { label: 'Mootori kohta', value: '≈150 g' },
       ],
       scene: { type: 'quadSide', axis: 'pitch', tilt: 0, thrust: [0.5, 0.5], motion: 'hover', showWeight: true },
@@ -92,43 +82,42 @@ Oluline disainiparameeter on **tõukejõu ja kaalu suhe** (TWR). Kaameradroonil 
       short: 'Tõus',
       title: 'Tõus ja laskumine',
       tag: 'TEHNIKA',
-      text: `Kui kõik neli mootorit kiirendavad ühepalju, kasvab tõukejõud ja droon tõuseb. Kui kõik aeglustavad, droon laskub. Pult saadab selle käsu **gaasikangiga** (throttle).
+      text: `Kui kõik neli mootorit hakkavad ühepalju kiiremini pöörlema, on tõukejõud kaalust suurem ja droon **tõuseb**. Kui kõik aeglustavad, droon **laskub**.
 
-Kuna T ∝ n², annab tõukejõu kahekordistamise juba pöörete kasv umbes **41%** (√2 ≈ 1,41).
+Puldil juhib seda **gaasikang** (inglise keeles *throttle*).
 
-Kiirel vertikaalsel laskumisel satub droon oma propellerite alla lükatud pöörisesse õhku. Tõukejõud muutub ebaühtlaseks ja droon hakkab vappuma (**propwash**, äärmisel juhul *vortex ring state*). Seepärast laskutakse sageli kerge edasiliikumisega.`,
-      keyIdea: 'Gaas muudab kõiki nelja mootorit korraga ja ühepalju, nii et droon ei kaldu ega pööra.',
+Kui droon laskub otse alla, satub ta oma propellerite tekitatud keerisesse ja hakkab vappuma. Seepärast tasub laskuda kerge edasiliikumisega.`,
+      keyIdea: 'Gaas muudab kõiki nelja mootorit korraga, nii et droon liigub otse üles või alla.',
       changes: [
-        { kind: '~', text: 'Kõik mootorid 50% → 75%' },
+        { kind: '~', text: 'Kõik mootorid kiiremaks' },
         { kind: '+', text: 'Liikumine üles' },
       ],
       metrics: [
         { label: 'Gaas', value: '75%' },
-        { label: 'ΣT / m·g', value: '> 1' },
         { label: 'Liikumine', value: '↑' },
       ],
       scene: { type: 'quadSide', axis: 'pitch', tilt: 0, thrust: [0.75, 0.75], motion: 'up', showWeight: true },
     },
     {
       short: 'Vastupöörlemine',
-      title: 'Miks naaberpropellerid pöörlevad vastassuundades',
+      title: 'Miks propellerid pöörlevad eri suundades',
       tag: 'FÜÜSIKA',
-      text: `Õhutakistus pidurdab pöörlevat propellerit. Mootor peab seda ületama ja Newtoni kolmanda seaduse järgi mõjub kerele **vastassuunaline reaktsioonimoment**, ligikaudu võrdeline n²-ga.
+      text: `Kui propeller pöörleb ühele poole, püüab see drooni keha keerata teisele poole. Proovi kontoritoolil istudes käega kiiresti ringe teha: tool hakkab vastupidi keerama.
 
-Seepärast pöörlevad **diagonaalpaarid** samas suunas: M1 ja M4 päripäeva (CW), M2 ja M3 vastupäeva (CCW). Lillad nooled näitavad momenti, millega iga mootor kere keerata püüab.
+Kui kõik propellerid pöörleksid samas suunas, keerleks droon pidevalt ringi. Seepärast pöörlevad **pooled päripäeva ja pooled vastupäeva**:
+- M1 ja M4 päripäeva (oranž)
+- M2 ja M3 vastupäeva (sinine)
 
-Betaflighti vaikimisi suund on **props in** (eesmised propellerid liiguvad ees keskele). Paljud freestyle-piloodid kasutavad vastupidist **props out** suunda, mis tuleb siis ka seadistuses märkida.`,
-      // TODO(ekspert): props out eelistamise põhjus (vähem prahti kaamera ette, parem käitumine yaw'l?) on jäetud lahti seletamata.
-      keyIdea: 'Kaks CW ja kaks CCW propellerit tasakaalustavad teineteise momendid: võrdse kiiruse juures on netomoment null.',
+Lillad nooled näitavad, kuhu poole iga mootor kere keerata püüab. Need tühistavad üksteist.`,
+      keyIdea: 'Kaks propellerit keerab ühele poole, kaks teisele. Nii jääb droon otse.',
       changes: [
-        { kind: '+', text: 'Pöörlemissuunad CW / CCW' },
-        { kind: '+', text: 'Reaktsioonimomendid' },
-        { kind: '~', text: 'Vaade: ülaltvaade' },
+        { kind: '+', text: 'Pöörlemissuunad' },
+        { kind: '+', text: 'Keeramise jõud (lillad nooled)' },
+        { kind: '~', text: 'Vaade ülalt' },
       ],
       metrics: [
-        { label: 'CW', value: 'M1 M4' },
-        { label: 'CCW', value: 'M2 M3' },
-        { label: 'Netomoment', value: '0' },
+        { label: 'Päripäeva', value: 'M1 M4' },
+        { label: 'Vastupäeva', value: 'M2 M3' },
       ],
       scene: {
         type: 'quadTop',
@@ -140,22 +129,21 @@ Betaflighti vaikimisi suund on **props in** (eesmised propellerid liiguvad ees k
     },
     {
       short: 'Pitch',
-      title: 'Pitch: tagumised mootorid kiiremaks',
+      title: 'Ette kallutamine (pitch)',
       tag: 'TEHNIKA',
-      text: `Ette kallutamiseks (nina alla, **pitch**) kiirendavad **tagumised mootorid M1 ja M3** ning eesmised **M2 ja M4** aeglustavad.
+      text: `Et droon kalduks nina ette, hakkavad **tagumised mootorid** (M1 ja M3) kiiremini pöörlema ja **eesmised** (M2 ja M4) aeglasemalt.
 
-Tagumine ots tõuseb, eesmine langeb ja droon pöörleb ümber oma põikitelje.
+Tagaots tõuseb, nina vajub alla. Seda liigutust nimetatakse inglise keeles **pitch**.
 
-Tahapoole kallutamiseks on kõik vastupidi.`,
-      keyIdea: 'Kummaski paaris on üks CW ja üks CCW mootor, nii et momendid jäävad tasakaalu ja droon ei hakka pöörama.',
+Taha kallutamiseks on kõik vastupidi.`,
+      keyIdea: 'Kuhu poole droon kaldub, seal pool mootorid aeglustavad.',
       changes: [
-        { kind: '~', text: 'M1, M3 → 72%' },
-        { kind: '~', text: 'M2, M4 → 28%' },
+        { kind: '~', text: 'Tagumised mootorid kiiremaks' },
+        { kind: '~', text: 'Eesmised mootorid aeglasemaks' },
       ],
       metrics: [
-        { label: 'Taga', value: '72%' },
-        { label: 'Ees', value: '28%' },
-        { label: 'Yaw', value: '0' },
+        { label: 'Taga', value: 'kiirem' },
+        { label: 'Ees', value: 'aeglasem' },
       ],
       scene: {
         type: 'quadTop',
@@ -167,25 +155,24 @@ Tahapoole kallutamiseks on kõik vastupidi.`,
     },
     {
       short: 'Kaldes lend',
-      title: 'Kaldes tõukejõud liigutab drooni',
+      title: 'Kaldes droon liigub edasi',
       tag: 'FÜÜSIKA',
-      text: `Kui droon on kaldes, pöörlevad kõik mootorid jälle ühtlaselt. Muutunud on **tõukejõu suund**.
+      text: `Kui droon on kaldes, pöörlevad kõik mootorid jälle ühtlaselt. Muutunud on see, **kuhu propellerid õhku lükkavad**: mitte enam otse alla, vaid alla ja taha.
 
-Kaldenurga **θ** korral jaguneb kogutõukejõud T kaheks:
-- vertikaalne osa **T·cos θ** hoiab drooni õhus
-- horisontaalne osa **T·sin θ** kiirendab drooni edasi
+Seepärast jaguneb tõukejõud kaheks:
+- üks osa hoiab drooni **üleval**
+- teine osa viib drooni **edasi**
 
-30° kalde juures on kõrguse hoidmiseks vaja ligikaudu 15% rohkem tõukejõudu, 60° juures juba kaks korda rohkem.`,
-      keyIdea: 'Kuna cos θ < 1, tuleb kaldes lennul kõrguse hoidmiseks gaasi lisada.',
+Kuna üles jääb nüüd vähem jõudu, hakkab kaldes droon kõrgust kaotama, kui piloot gaasi juurde ei anna.`,
+      keyIdea: 'Mida rohkem droon kaldub, seda kiiremini ta liigub, aga seda rohkem gaasi on vaja.',
       changes: [
-        { kind: '~', text: 'Kalle 0° → 20°' },
-        { kind: '+', text: 'Komponendid T·cos θ ja T·sin θ' },
+        { kind: '~', text: 'Droon kaldes' },
+        { kind: '+', text: 'Tõukejõu jagunemine' },
         { kind: '+', text: 'Liikumine edasi' },
       ],
       metrics: [
-        { label: 'Kalle θ', value: '20°' },
-        { label: 'cos θ', value: '0,94' },
-        { label: 'Lisagaas', value: '+6%' },
+        { label: 'Kalle', value: '20°' },
+        { label: 'Liikumine', value: '→' },
       ],
       scene: {
         type: 'quadSide',
@@ -199,20 +186,19 @@ Kaldenurga **θ** korral jaguneb kogutõukejõud T kaheks:
     },
     {
       short: 'Roll',
-      title: 'Roll: vasakpoolsed mootorid kiiremaks',
+      title: 'Külgsuunas kallutamine (roll)',
       tag: 'TEHNIKA',
-      text: `Külgsuunas kallutamine (**roll**) töötab samamoodi, ainult teise telje ümber. Paremale kallutamiseks kiirendavad **vasakpoolsed mootorid M3 ja M4** ning parempoolsed **M1 ja M2** aeglustavad.
+      text: `Paremale kallutamine käib samamoodi nagu ette kallutamine, ainult teises suunas. **Vasakpoolsed mootorid** (M3 ja M4) kiirendavad ja **parempoolsed** (M1 ja M2) aeglustavad.
 
-Pärast kallutamist liigub droon kalde suunas samamoodi nagu pitchi puhul: tõukejõu horisontaalne osa kiirendab teda paremale.`,
-      keyIdea: 'Roll ja pitch tekivad tõukejõudude vahest, mis mõjub õlaga (mootori kaugus keskpunktist).',
+Droon kaldub paremale ja hakkab paremale liikuma. Seda nimetatakse **roll**.`,
+      keyIdea: 'Ette, taha, vasakule ja paremale liigub droon alati kallutades.',
       changes: [
-        { kind: '~', text: 'M3, M4 → 72%' },
-        { kind: '~', text: 'M1, M2 → 28%' },
+        { kind: '~', text: 'Vasakpoolsed mootorid kiiremaks' },
+        { kind: '~', text: 'Parempoolsed mootorid aeglasemaks' },
       ],
       metrics: [
-        { label: 'Vasak', value: '72%' },
-        { label: 'Parem', value: '28%' },
-        { label: 'Yaw', value: '0' },
+        { label: 'Vasak', value: 'kiirem' },
+        { label: 'Parem', value: 'aeglasem' },
       ],
       scene: {
         type: 'quadTop',
@@ -224,22 +210,20 @@ Pärast kallutamist liigub droon kalde suunas samamoodi nagu pitchi puhul: tõuk
     },
     {
       short: 'Yaw',
-      title: 'Yaw: pööramine momentide vahega',
+      title: 'Paigal pööramine (yaw)',
       tag: 'TEHNIKA',
-      text: `Paremale pööramiseks (ülalt vaadates päripäeva) kiirendavad **vastupäeva pöörlevad M2 ja M3** ning päripäeva pöörlevad **M1 ja M4** aeglustavad. CCW propellerite suurem reaktsioonimoment keerab kere päripäeva.
+      text: `Paigal ringi pööramiseks kasutab droon sama keeramise jõudu, mida nägime sammus 5.
 
-Kiirendatakse diagonaalpaari, seega tõukejõud kasvab ühtlaselt kahes vastasnurgas ja **droon ei kaldu**. Kogutõukejõud jääb ligikaudu samaks.
+Paremale pööramiseks hakkavad **vastupäeva pöörlevad** mootorid (M2 ja M3) kiiremini käima ja päripäeva pöörlevad aeglasemalt. Nende keeramise jõud on nüüd suurem ja droon pöörab.
 
-Yaw on kolmest teljest **nõrgim**: see tugineb ainult propellerite takistusmomendile, mitte tõukejõule õlaga.`,
-      keyIdea: 'Kere pöörleb vastupidi nendele propelleritele, mis kiirendasid.',
+Kõrgus ei muutu, sest kaks mootorit kiirendab ja kaks aeglustab. Seda liigutust nimetatakse **yaw**.`,
+      keyIdea: 'Droon pöörab vastupidi nendele propelleritele, mis kiirendasid.',
       changes: [
-        { kind: '~', text: 'M2, M3 (CCW) → 62%' },
-        { kind: '~', text: 'M1, M4 (CW) → 36%' },
-        { kind: '+', text: 'Netomoment päripäeva' },
+        { kind: '~', text: 'Vastupäeva mootorid kiiremaks' },
+        { kind: '+', text: 'Droon pöörab paremale' },
       ],
       metrics: [
-        { label: 'CCW paar', value: '62%' },
-        { label: 'CW paar', value: '36%' },
+        { label: 'Kiirem', value: 'M2 M3' },
         { label: 'Pööre', value: '↻' },
       ],
       scene: {
@@ -253,26 +237,21 @@ Yaw on kolmest teljest **nõrgim**: see tugineb ainult propellerite takistusmome
       },
     },
     {
-      short: 'Mikser',
-      title: 'Mikser: kõik käsud korraga',
+      short: 'Proovi ise',
+      title: 'Proovi ise: lenda puldiga',
       tag: 'PROOVI',
-      text: `Päris lennus tuleb gaas, roll, pitch ja yaw kõik korraga. Lennukontrolleri **mikser** liidab need iga mootori jaoks kokku:
+      text: `Nüüd saad ise lennata. Puldil on kaks kangi (seda paigutust nimetatakse **Mode 2**):
+- **vasak kang**: üles-alla on gaas, vasakule-paremale on pööramine
+- **parem kang**: ette-taha ja vasakule-paremale kallutamine
 
-- **M1** = G − R + P − Y
-- **M2** = G − R − P + Y
-- **M3** = G + R + P + Y
-- **M4** = G + R − P − Y
+Lohista kange hiire või sõrmega. Võid ka kangi valida ja kasutada nooleklahve.
 
-Proovi kange (**Mode 2**): vasak kang on gaas ja yaw, parem kang pitch ja roll. Lohista hiire või sõrmega või vali kang ja kasuta nooleklahve. Ruumilises vaates järgneb kaamera droonile tagant: proovi tõusta, lennata läbi värava ja pöörata. Sildid propellerite juures näitavad, milline mootor kiirendab (roheline) ja milline aeglustab (punane). Pane tähele, et kallutades kaotab droon kõrgust, kui gaasi juurde ei anna.
+Propellerite juures olevad sildid näitavad, milline mootor kiirendab (roheline) ja milline aeglustab (punane). Ülesanne: tõuse üles ja lenda läbi oranži värava.
 
-Füüsika on lihtsustatud: kalle järgib kangi nagu **angle**-režiimis.
-
-Kui mõni mootor jõuab nulli või maksimumi, ei saa mikser käsku enam täpselt täita. Betaflight hoiab juhtimisele varu, vajadusel nihutades kõigi mootorite taset (**airmode**).`,
-      // TODO(ekspert): Betaflighti sisemine mikseri märgikokkulepe võib erineda; siin on esitatud mõisteline versioon.
-      keyIdea: 'Iga mootori kiirus = gaas ± roll ± pitch ± yaw. Märgid sõltuvad mootori asukohast ja pöörlemissuunast.',
+Siin on lendamine lihtsustatud. Päris drooni juhtimist harjutame moodulis 2.`,
+      keyIdea: 'Sina annad kangidega käsu, lennukontroller otsustab, kui kiiresti iga mootor pöörleb.',
       changes: [
-        { kind: '+', text: 'Mode 2 pult' },
-        { kind: '+', text: 'Mikseri valem' },
+        { kind: '+', text: 'Pult kahe kangiga' },
         { kind: '+', text: 'Ruumiline lennuvaade' },
       ],
       scene: { type: 'mixer' },
@@ -281,100 +260,99 @@ Kui mõni mootor jõuab nulli või maksimumi, ei saa mikser käsku enam täpselt
       short: 'Lennukontroller',
       title: 'Lennukontroller hoiab tasakaalu',
       tag: 'KOKKUVÕTE',
-      text: `Quad on **iseenesest ebastabiilne**: väikseimgi erinevus mootorites, tuuleiil või raskuskeskme nihe hakkab drooni pöörama ja ükski looduslik jõud ei too seda tagasi.
+      text: `Quad ei püsi ise tasakaalus. Väike tuuleiil või ebaühtlane mootor võib selle kohe ümber lükata.
 
-Seepärast mõõdab lennukontroller **güroskoobiga** pidevalt drooni pöörlemiskiirust, võrdleb seda piloodi soovitud väärtusega ja parandab mootorite kiirust. Betaflightis jookseb see tsükkel tavaliselt mitu tuhat korda sekundis.
+Seepärast on droonil väike arvuti, **lennukontroller**. See mõõdab tuhandeid kordi sekundis, kuidas droon liigub, ja muudab vajadusel mootorite kiirust.
 
-Ka "paigal hõljudes" muutuvad mootorite kiirused kogu aeg veidi. Kuidas see täpsemalt töötab (PID-regulaator), vaatame moodulis 4.`,
-      // TODO(ekspert): "mitu tuhat korda sekundis" — Betaflight 4.x PID-tsükkel tavaliselt 4–8 kHz, sõltub FC-st.
-      keyIdea: 'Piloot ei juhi mootoreid otse. Piloot ütleb, mida droon tegema peab, lennukontroller otsustab, kuidas.',
+Vaata: isegi paigal hõljudes muutuvad mootorite kiirused kogu aeg natuke. Lennukontroller parandab pidevalt.`,
+      // TODO(ekspert): "tuhandeid kordi sekundis" — Betaflight 4.x PID-tsükkel tavaliselt 4–8 kHz, sõltub FC-st.
+      keyIdea: 'Ilma lennukontrollerita ei saaks quadiga üldse lennata.',
       changes: [{ kind: '+', text: 'Pidevad väikesed parandused' }],
       metrics: [
-        { label: 'Andur', value: 'güroskoop' },
-        { label: 'Tsükkel', value: '4–8 kHz' },
-        { label: 'Järgmine', value: 'PID' },
+        { label: 'Parandusi', value: 'tuhandeid/s' },
+        { label: 'Järgmine', value: 'moodul 2' },
       ],
       scene: { type: 'quadTop', motors: [0.5, 0.5, 0.5, 0.5], showNumbers: true, jitter: true },
     },
   ],
   quiz: [
     {
-      question: 'Mis tingimus peab kehtima, et droon hõljuks paigal?',
+      question: 'Mis peab olema täidetud, et droon õhus paigal hõljuks?',
       options: [
-        'Kõik mootorid pöörlevad maksimumkiirusel',
-        'Nelja mootori tõukejõudude summa võrdub drooni kaaluga',
-        'Iga mootori tõukejõud võrdub drooni kaaluga',
-        'CW mootorid pöörlevad kiiremini kui CCW mootorid',
+        'Kõik mootorid pöörlevad täiskiirusel',
+        'Propellerite tõukejõud kokku on sama suur kui drooni kaal',
+        'Iga mootor tõstab üksi kogu drooni',
+        'Mootorid on välja lülitatud',
       ],
       correct: 1,
-      explanation: 'Hõljumisel on jõud tasakaalus: ΣT = m·g. Iga mootor kannab seega umbes veerandi kaalust.',
+      explanation: 'Kui ülespoole lükkav jõud ja raskusjõud on võrdsed, ei liigu droon üles ega alla.',
     },
     {
-      question: 'Kui propelleri pöörlemissagedus kahekordistub, siis tõukejõud…',
-      options: ['kahekordistub', 'kasvab umbes neli korda', 'kasvab umbes kaheksa korda', 'ei muutu'],
-      correct: 1,
-      explanation: 'Tõukejõud on ligikaudu võrdeline pöörete ruuduga: T ≈ k·n², seega 2² = 4. Võimsus kasvab aga umbes 2³ = 8 korda.',
+      question: 'Propeller hakkab kaks korda kiiremini pöörlema. Mis juhtub tõukejõuga?',
+      options: ['Jääb samaks', 'Kasvab kaks korda', 'Kasvab umbes neli korda', 'Väheneb'],
+      correct: 2,
+      explanation: 'Tõukejõud kasvab kiiremini kui pöörded: kaks korda kiirem pöörlemine annab umbes neli korda rohkem jõudu.',
     },
     {
-      question: 'Miks pöörlevad naaberpropellerid vastassuundades?',
+      question: 'Miks pöörlevad pooled propellerid päripäeva ja pooled vastupäeva?',
       options: [
-        'Et vähendada müra',
-        'Et propellereid saaks paigaldada ainult ühtpidi',
-        'Et propellerite reaktsioonimomendid tasakaalustuksid ja droon ei keerleks',
-        'Et suurendada kogutõukejõudu',
+        'Et droon ei hakkaks ise ringi keerlema',
+        'Et droon oleks vaiksem',
+        'Et propellereid oleks lihtsam osta',
+        'Et droon lendaks kiiremini',
+      ],
+      correct: 0,
+      explanation: 'Iga propeller püüab drooni keha vastassuunas keerata. Kui pooled pöörlevad ühele ja pooled teisele poole, need jõud tühistavad üksteist.',
+    },
+    {
+      question: 'Droon peab nina ette kallutama. Millised mootorid kiirendavad?',
+      options: ['Eesmised (M2 ja M4)', 'Vasakpoolsed (M3 ja M4)', 'Kõik neli ühepalju', 'Tagumised (M1 ja M3)'],
+      correct: 3,
+      explanation: 'Tagumised mootorid tõstavad drooni tagaosa ja nina vajub alla.',
+    },
+    {
+      question: 'Kuidas droon paigal paremale pöörab (yaw)?',
+      options: [
+        'Kõik mootorid aeglustavad',
+        'Parempoolsed mootorid kiirendavad',
+        'Vastupäeva pöörlevad mootorid kiirendavad ja päripäeva pöörlevad aeglustavad',
+        'Droon peab enne maanduma',
       ],
       correct: 2,
-      explanation: 'Iga propeller püüab kere vastassuunas keerata. Kaks CW ja kaks CCW propellerit tasakaalustavad üksteist ning yaw-pööre tekib alles siis, kui paaride kiirused erinevad.',
+      explanation: 'Kiiremad propellerid keeravad kere vastassuunas. Vastupäeva pöörlevad propellerid keeravad drooni päripäeva ehk paremale.',
     },
     {
-      question: 'Droon peab nina alla kallutama (pitch ette). Millised mootorid kiirendavad (Betaflight Quad X)?',
-      options: ['M2 ja M4 (eesmised)', 'M1 ja M3 (tagumised)', 'M3 ja M4 (vasakpoolsed)', 'M1 ja M4 (CW paar)'],
-      correct: 1,
-      explanation: 'Tagumised mootorid tõstavad tagaosa ja nina vajub alla. Kummaski paaris on üks CW ja üks CCW mootor, nii et yaw jääb tasakaalu.',
-    },
-    {
-      question: 'Droon peab ülalt vaadates päripäeva pöörama (yaw paremale). Mida teeb mikser?',
+      question: 'Droon kaldub ette, aga piloot gaasi juurde ei anna. Mis juhtub?',
       options: [
-        'Kiirendab päripäeva pöörlevaid mootoreid M1 ja M4',
-        'Kiirendab vastupäeva pöörlevaid mootoreid M2 ja M3',
-        'Kiirendab parempoolseid mootoreid M1 ja M2',
-        'Aeglustab kõiki mootoreid',
+        'Droon liigub edasi ja hakkab kõrgust kaotama',
+        'Droon jääb paigale',
+        'Droon tõuseb kiiresti',
+        'Droon pöörab ringi',
+      ],
+      correct: 0,
+      explanation: 'Kaldes läheb osa tõukejõust edasiliikumiseks ja drooni üleval hoidmiseks jääb vähem jõudu.',
+    },
+    {
+      question: 'Mida teeb puldi vasak kang (Mode 2)?',
+      options: [
+        'Kallutab drooni ette ja taha',
+        'Lülitab kaamera sisse',
+        'Kallutab drooni vasakule ja paremale',
+        'Muudab gaasi (üles-alla) ja pöörab drooni (vasakule-paremale)',
+      ],
+      correct: 3,
+      explanation: 'Mode 2 puldil on vasak kang gaas ja pööramine, parem kang kallutamine.',
+    },
+    {
+      question: 'Miks on droonil vaja lennukontrollerit?',
+      options: [
+        'Et droon saaks muusikat mängida',
+        'Et hoida drooni tasakaalus, parandades mootorite kiirust tuhandeid kordi sekundis',
+        'Et aku kauem vastu peaks',
+        'Ainult video salvestamiseks',
       ],
       correct: 1,
-      explanation: 'Kere pöörleb vastupidi propelleritele, mis kiirendasid. CCW propellerite suurem reaktsioonimoment keerab kere päripäeva.',
-    },
-    {
-      question: 'Miks peab ettepoole kallutatud droon kõrguse hoidmiseks gaasi lisama?',
-      options: [
-        'Sest kaldes propellerid on vähem efektiivsed',
-        'Sest kallutamiseks kulub osa akust',
-        'Sest kõrgust hoiab ainult tõukejõu vertikaalne osa T·cos θ, mis on väiksem kui T',
-        'Sest õhutakistus kasvab',
-      ],
-      correct: 2,
-      explanation: 'Kaldes jaguneb tõukejõud vertikaalseks (T·cos θ) ja horisontaalseks (T·sin θ) osaks. Kaalu kompenseerimiseks peab T suurenema.',
-    },
-    {
-      question: 'Miks on yaw tavaliselt kolmest teljest kõige nõrgema juhtimisega?',
-      options: [
-        'Sest yaw-andur on vähem täpne',
-        'Sest yaw tugineb ainult propellerite takistusmomendile, mitte tõukejõule õlaga',
-        'Sest piloodid kasutavad yaw-kangi harva',
-        "Sest Betaflight piirab yaw'd tarkvaraliselt alati 50%-ni",
-      ],
-      correct: 1,
-      explanation: 'Roll ja pitch tekivad tõukejõu erinevusest korrutatuna õlaga (mootori kaugus keskpunktist). Yaw tekib ainult reaktsioonimomendist, mis on palju väiksem.',
-    },
-    {
-      question: 'Miks ei saa quad lennata ilma lennukontrollerita?',
-      options: [
-        'Sest vastuvõtja ei oska mootoreid otse juhtida',
-        'Sest quad on iseenesest ebastabiilne ja vajab pidevaid parandusi tuhandeid kordi sekundis',
-        'Sest ESC-d vajavad lennukontrollerilt toidet',
-        'Sest seadus nõuab seda',
-      ],
-      correct: 1,
-      explanation: 'Ükski looduslik jõud ei too quadi tasakaaluasendisse tagasi. Lennukontroller mõõdab güroskoobiga pöördeid ja parandab mootorite kiirusi pidevalt.',
+      explanation: 'Quad ei püsi ise tasakaalus. Lennukontroller mõõdab pidevalt drooni liikumist ja parandab mootorite kiirusi.',
     },
   ],
 };

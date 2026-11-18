@@ -12,8 +12,21 @@ interface Props {
   doneLabel: string;
 }
 
+/** Vastusevariantide juhuslik järjekord, et õige vastus ei oleks alati samal kohal. */
+function shuffledOrders(questions: QuizQuestion[]) {
+  return questions.map((q) => {
+    const order = q.options.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    return order;
+  });
+}
+
 export default function Quiz({ storageKey, title, questions, doneHref, doneLabel }: Props) {
   const [answers, setAnswers] = useState<(number | null)[]>(() => questions.map(() => null));
+  const [orders, setOrders] = useState(() => shuffledOrders(questions));
   const answered = answers.filter((a) => a !== null).length;
   const score = answers.filter((a, i) => a === questions[i].correct).length;
   const finished = answered === questions.length;
@@ -44,7 +57,7 @@ export default function Quiz({ storageKey, title, questions, doneHref, doneLabel
             <li key={qi} className="question">
               <h2>{q.question}</h2>
               <div className="options" role="group">
-                {q.options.map((opt, oi) => {
+                {orders[qi].map((oi, pos) => {
                   let cls = 'option';
                   if (chosen !== null) {
                     if (oi === q.correct) cls += ' correct';
@@ -59,8 +72,8 @@ export default function Quiz({ storageKey, title, questions, doneHref, doneLabel
                       onClick={() => choose(qi, oi)}
                       disabled={chosen !== null}
                     >
-                      <span className="opt-letter">{String.fromCharCode(65 + oi)}</span>
-                      {opt}
+                      <span className="opt-letter">{String.fromCharCode(65 + pos)}</span>
+                      {q.options[oi]}
                     </button>
                   );
                 })}
@@ -89,7 +102,10 @@ export default function Quiz({ storageKey, title, questions, doneHref, doneLabel
                 : 'Tasub moodul veel kord läbi käia.'}
           </p>
           <div className="row">
-            <button type="button" className="btn" onClick={() => setAnswers(questions.map(() => null))}>
+            <button type="button" className="btn" onClick={() => {
+                setAnswers(questions.map(() => null));
+                setOrders(shuffledOrders(questions));
+              }}>
               Proovi uuesti
             </button>
             <a className="btn primary" href={doneHref}>

@@ -143,8 +143,8 @@ export default function QuadSide({ axis, tilt, thrust, motion = 'hover', showWei
         {showWeight && (
           <>
             <path d={arrow(0, 10, 0, 72)} className="weight-arrow" markerEnd="url(#side-weight)" />
-            <text x={10} y={82} className="force-label weight">
-              m·g
+            <text x={-10} y={82} className="force-label weight end">
+              raskusjõud
             </text>
           </>
         )}
@@ -165,14 +165,14 @@ export default function QuadSide({ axis, tilt, thrust, motion = 'hover', showWei
             markerEnd="url(#side-thrust)"
           />
           <circle r={3} className="fill-thrust" />
-          <text x={Math.sin(rad) * tLen * 0.5 + 10} y={-Math.cos(rad) * tLen * 0.5 + 10} className="force-label thrust">
-            T
+          <text x={0} y={20} className="force-label thrust mid">
+            tõukejõud
           </text>
-          <text x={-8} y={-Math.cos(rad) * tLen * 0.75} className="force-label comp end">
-            T·cos θ
+          <text x={-8} y={-Math.cos(rad) * tLen * 0.12} className="force-label comp end">
+            hoiab üleval
           </text>
           <text x={(Math.sin(rad) * tLen) / 2} y={-Math.cos(rad) * tLen - 10} className="force-label comp mid">
-            T·sin θ
+            viib edasi
           </text>
         </g>
       )}
