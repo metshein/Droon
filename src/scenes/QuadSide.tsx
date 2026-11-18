@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { useAnimationFrame, useSpring } from 'framer-motion';
+import { useSpring } from 'framer-motion';
+import { useFrame } from './playback';
 
 // Quad külgvaates (pitch) või tagantvaates (roll). Kalle + = parem pool alla.
 
@@ -35,14 +36,14 @@ function SideProp({ x, power }: { x: number; power: number }) {
   // Külgvaates paistab pöörlev propeller "hingava" ellipsina.
   const ref = useRef<SVGEllipseElement>(null);
   const t = useRef(0);
-  useAnimationFrame((_, dt) => {
+  useFrame((dt) => {
     t.current += dt * (0.01 + power * 0.04);
     ref.current?.setAttribute('rx', String(30 + Math.abs(Math.sin(t.current)) * 8));
   });
   return (
     <g>
       <rect x={x - 7} y={-14} width={14} height={12} rx={2} className="motor-bell" />
-      <line x1={x} y1={-14} x2={x} y2={-19} className="frame-arm thin" />
+      <line x1={x} y1={-14} x2={x} y2={-19} className="prop-shaft" />
       <ellipse ref={ref} cx={x} cy={-20} rx={34} ry={3} className="prop-side" opacity={0.4 + power * 0.5} />
     </g>
   );
@@ -69,7 +70,7 @@ export default function QuadSide({ axis, tilt, thrust, motion = 'hover', showWei
     right: [-90, 0],
   }[motion];
 
-  useAnimationFrame((_, dt) => {
+  useFrame((dt) => {
     const s = st.current;
     s.t += dt;
     s.vx += (target[0] - s.vx) * Math.min(1, dt / 600);
@@ -117,8 +118,9 @@ export default function QuadSide({ axis, tilt, thrust, motion = 'hover', showWei
       </g>
 
       <g ref={quad}>
-        <line x1={-ARM} y1={-2} x2={ARM} y2={-2} className="frame-arm" />
-        <rect x={-28} y={-12} width={56} height={20} rx={5} className="frame-body" />
+        <line x1={-ARM} y1={-2} x2={ARM} y2={-2} className="arm-outline side" />
+        <line x1={-ARM} y1={-2} x2={ARM} y2={-2} className="arm-fill side" />
+        <rect x={-28} y={-12} width={56} height={20} rx={6} className="frame-body" />
         <SideProp x={-ARM} power={thrust[0]} />
         <SideProp x={ARM} power={thrust[1]} />
         {[-ARM, ARM].map((x, i) => (

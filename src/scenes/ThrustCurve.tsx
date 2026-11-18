@@ -53,7 +53,7 @@ export default function ThrustCurve({ rpm = 0.5 }: { rpm?: number }) {
         <circle cx={px(n)} cy={py(power)} r={6} className="curve-dot power" />
 
         <g className="legend" transform={`translate(${L + 10} ${T + 6})`}>
-          <rect width={150} height={64} rx={8} className="legend-bg" />
+          <rect width={176} height={64} rx={10} className="legend-bg" />
           <line x1={10} x2={30} y1={16} y2={16} className="curve thrust" />
           <text x={38} y={20}>tõukejõud ∝ n²</text>
           <line x1={10} x2={30} y1={34} y2={34} className="curve power" />

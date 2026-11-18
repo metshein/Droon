@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import QuadTop, { MOTOR_DIR } from './QuadTop';
+import QuadTop from './QuadTop';
+import Stick from './Stick';
 import type { MotorQuad } from '../types';
 
-// Interaktiivne mikser: gaas + roll + pitch + yaw -> nelja mootori kiirused.
+// Interaktiivne mikser Mode 2 puldiga: vasak kang = gaas + yaw, parem kang = pitch + roll.
+// Kere pööre näitab ainult yaw-käsku: päris droonil kompenseerib lennukontroller roll/pitch-i kõrvalmõju.
 // Märgid: roll paremale, nina alla ja yaw paremale (päripäeva) on positiivsed.
 export const MIX: [number, number, number][] = [
   // [roll, pitch, yaw]
@@ -12,55 +14,82 @@ export const MIX: [number, number, number][] = [
   [1, -1, -1], // M4 eesmine vasak, CW
 ];
 
-export function mix(throttle: number, roll: number, pitch: number, yaw: number): MotorQuad {
-  return MIX.map(([r, p, y]) => Math.min(1, Math.max(0, throttle + r * roll + p * pitch + y * yaw))) as MotorQuad;
+export function mixRaw(throttle: number, roll: number, pitch: number, yaw: number): number[] {
+  return MIX.map(([r, p, y]) => throttle + r * roll + p * pitch + y * yaw);
 }
 
-const AXES = [
-  { key: 'g', label: 'Gaas (G)', min: 0, max: 1, def: 0.5 },
-  { key: 'r', label: 'Roll (R)', min: -0.4, max: 0.4, def: 0 },
-  { key: 'p', label: 'Pitch (P)', min: -0.4, max: 0.4, def: 0 },
-  { key: 'y', label: 'Yaw (Y)', min: -0.4, max: 0.4, def: 0 },
-] as const;
+export function mix(throttle: number, roll: number, pitch: number, yaw: number): MotorQuad {
+  return mixRaw(throttle, roll, pitch, yaw).map((v) => Math.min(1, Math.max(0, v))) as MotorQuad;
+}
 
-type Key = (typeof AXES)[number]['key'];
+/** Kangi täishälbe mõju mootorile. */
+const AUTHORITY = 0.3;
+
+function MotorChips({ deltas }: { deltas: number[] }) {
+  return (
+    <div className="motor-chips">
+      {deltas.map((d, i) => (
+        <span key={i} className={d > 0.02 ? 'chip up' : d < -0.02 ? 'chip down' : 'chip'}>
+          M{i + 1} {d > 0.02 ? '▲' : d < -0.02 ? '▼' : '·'}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 export default function Mixer() {
-  const [v, setV] = useState<Record<Key, number>>({ g: 0.5, r: 0, p: 0, y: 0 });
-  const motors = mix(v.g, v.r, v.p, v.y);
-  const net = -motors.reduce((s, m, i) => s + MOTOR_DIR[i] * m * m, 0);
-  const saturated = MIX.some(([r, p, y]) => {
-    const raw = v.g + r * v.r + p * v.p + y * v.y;
-    return raw < 0 || raw > 1;
-  });
+  const [left, setLeft] = useState({ x: 0, y: 0 });
+  const [right, setRight] = useState({ x: 0, y: 0 });
+
+  const g = (left.y + 1) / 2;
+  const yaw = left.x * AUTHORITY;
+  const roll = right.x * AUTHORITY;
+  const pitch = right.y * AUTHORITY;
+
+  const motors = mix(g, roll, pitch, yaw);
+  const saturated = mixRaw(g, roll, pitch, yaw).some((v) => v < 0 || v > 1);
+  const leftDeltas = MIX.map(([, , y]) => g - 0.5 + y * yaw);
+  const rightDeltas = MIX.map(([r, p]) => r * roll + p * pitch);
+  const accelerating = leftDeltas.map((_, i) => i).filter((i) => leftDeltas[i] + rightDeltas[i] > 0.02);
 
   return (
-    <div className="scene-stack">
-      <QuadTop motors={motors} showNumbers showDirections showTorque bodyYaw={net * 120} />
-      <div className="scene-controls grid">
-        {AXES.map((a) => (
-          <label key={a.key} className="slider">
-            <span>
-              {a.label}: {v[a.key] > 0 && a.key !== 'g' ? '+' : ''}
-              {Math.round(v[a.key] * 100)}
-            </span>
-            <input
-              type="range"
-              min={a.min}
-              max={a.max}
-              step={0.01}
-              value={v[a.key]}
-              onChange={(e) => setV({ ...v, [a.key]: Number(e.target.value) })}
-            />
-          </label>
-        ))}
-        <div className="mixer-footer">
-          <button type="button" className="btn small" onClick={() => setV({ g: 0.5, r: 0, p: 0, y: 0 })}>
-            Lähtesta
-          </button>
-          {saturated && <span className="warn">Mootor on piiril (0% või 100%), käsku ei saa täpselt täita</span>}
-        </div>
+    <div className="mixer">
+      <div className="mixer-quad">
+        <QuadTop
+          motors={motors}
+          showNumbers
+          showDirections
+          showTorque
+          highlight={accelerating}
+          bodyYaw={yaw * 300}
+        />
       </div>
+      <div className="stick-col left">
+          <Stick
+            label="Vasak · gaas + yaw"
+            x={left.x}
+            y={left.y}
+            springY={false}
+            onChange={(x, y) => setLeft({ x, y })}
+            axes={{ up: 'gaas +', down: 'gaas −', left: '↺', right: '↻' }}
+          />
+          <MotorChips deltas={leftDeltas} />
+      </div>
+      <div className="stick-col right">
+          <Stick
+            label="Parem · pitch + roll"
+            x={right.x}
+            y={right.y}
+            onChange={(x, y) => setRight({ x, y })}
+            axes={{ up: 'nina alla', down: 'nina üles', left: '◀', right: '▶' }}
+          />
+          <MotorChips deltas={rightDeltas} />
+      </div>
+      <p className={saturated ? 'mixer-note warn' : 'mixer-note'}>
+        {saturated
+          ? 'Mõni mootor on piiril (0% või 100%): käsku ei saa täpselt täita.'
+          : `G ${Math.round(g * 100)}% · R ${Math.round(roll * 100)} · P ${Math.round(pitch * 100)} · Y ${Math.round(yaw * 100)}`}
+      </p>
     </div>
   );
 }

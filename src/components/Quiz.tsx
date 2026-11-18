@@ -28,9 +28,9 @@ export default function Quiz({ storageKey, title, questions, doneHref, doneLabel
   };
 
   return (
-    <main className="quiz">
+    <main className="page quiz">
       <header className="quiz-head">
-        <p className="eyebrow">Enesekontroll</p>
+        <p className="crumbs">Enesekontroll</p>
         <h1>{title}</h1>
         <p className="hint">
           Vastatud {answered} / {questions.length}

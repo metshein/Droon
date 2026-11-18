@@ -44,10 +44,22 @@ export type SceneSpec =
     }
   | { type: 'mixer' };
 
+/** Sammu silt paremal paneelil. */
+export type StepTag = 'MÕISTE' | 'FÜÜSIKA' | 'TEHNIKA' | 'PROOVI' | 'KOKKUVÕTE';
+
 export interface Step {
+  /** Lühike nimi alumise sammuriba jaoks, 1–2 sõna. */
+  short: string;
   title: string;
+  tag?: StepTag;
   /** Lihtne markdown: tühi rida = uus lõik, "- " = loend, **paks**, *kaldkiri*, `kood`. */
   text: string;
+  /** Põhimõte, mida tasub meeles pidada (lilla kast). */
+  keyIdea?: string;
+  /** "Mis muutus" loend: + lisandus, ~ muutus, − kadus. */
+  changes?: { kind: '+' | '~' | '-'; text: string }[];
+  /** Näidikud skeemi kohal, nt { label: 'Kalle', value: '20°' }. */
+  metrics?: { label: string; value: string }[];
   scene: SceneSpec;
 }
 
@@ -65,6 +77,11 @@ export interface CourseModule {
   number: number;
   title: string;
   summary: string;
+  /** Hinnanguline kestus minutites. */
+  minutes?: number;
+  level?: 'Algaja' | 'Kesktase' | 'Edasijõudnu';
+  /** "Õpid" loend. `step` = sammu number (alates 1-st), mille läbimisel punkt linnukese saab. */
+  learn?: { text: string; step: number }[];
   steps: Step[];
   quiz: QuizQuestion[];
 }
