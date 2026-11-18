@@ -263,7 +263,9 @@ Yaw on kolmest teljest **nõrgim**: see tugineb ainult propellerite takistusmome
 - **M3** = G + R + P + Y
 - **M4** = G + R − P − Y
 
-Proovi kange (**Mode 2**): vasak kang on gaas ja yaw, parem kang pitch ja roll. Lohista hiire või sõrmega või vali kang ja kasuta nooleklahve.
+Proovi kange (**Mode 2**): vasak kang on gaas ja yaw, parem kang pitch ja roll. Lohista hiire või sõrmega või vali kang ja kasuta nooleklahve. All olevad vaated näitavad, kuidas droon tõuseb, laskub ja kalde suunas liigub. Pane tähele, et kallutades kaotab droon kõrgust, kui gaasi juurde ei anna.
+
+Füüsika on lihtsustatud: kalle järgib kangi nagu **angle**-režiimis.
 
 Kui mõni mootor jõuab nulli või maksimumi, ei saa mikser käsku enam täpselt täita. Betaflight hoiab juhtimisele varu, vajadusel nihutades kõigi mootorite taset (**airmode**).`,
       // TODO(ekspert): Betaflighti sisemine mikseri märgikokkulepe võib erineda; siin on esitatud mõisteline versioon.
@@ -271,6 +273,7 @@ Kui mõni mootor jõuab nulli või maksimumi, ei saa mikser käsku enam täpselt
       changes: [
         { kind: '+', text: 'Mode 2 pult' },
         { kind: '+', text: 'Mikseri valem' },
+        { kind: '+', text: 'Lennuvaade: kõrgus ja liikumine' },
       ],
       scene: { type: 'mixer' },
     },

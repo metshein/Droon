@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import QuadTop from './QuadTop';
 import Stick from './Stick';
+import FlightView from './FlightView';
 import type { MotorQuad } from '../types';
 
 // Interaktiivne mikser Mode 2 puldiga: vasak kang = gaas + yaw, parem kang = pitch + roll.
@@ -85,6 +86,12 @@ export default function Mixer() {
           />
           <MotorChips deltas={rightDeltas} />
       </div>
+      <FlightView
+        // Püsivas kaldes pöörlevad mootorid jälle ühtlaselt, seega kogutõukejõud tuleb gaasist (T ∝ n²).
+        thrust={(g / 0.5) ** 2}
+        pitch={right.y * 30}
+        roll={right.x * 30}
+      />
       <p className={saturated ? 'mixer-note warn' : 'mixer-note'}>
         {saturated
           ? 'Mõni mootor on piiril (0% või 100%): käsku ei saa täpselt täita.'
